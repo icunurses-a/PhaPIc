@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharma FINAL - Amer Alsharif</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #22c55e;
+            --error: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --light-text: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header & Title Animation --- */
+        header {
+            background: var(--card);
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            
+            /* Flexbox to align Avatar and Title */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px; /* Space between image and text */
+        }
+
+        /* Avatar Styling */
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* Makes it a circle */
+            object-fit: cover;  /* Ensures image fills the circle without stretching */
+            border: 2px solid var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #eee; /* Fallback color */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rgb-shake {
+            display: inline-block;
+            animation: rgbShake 2s infinite;
+            font-weight: 900;
+        }
+
+        @keyframes rgbShake {
+            0% { transform: translate(0, 0) rotate(0deg); color: #ff0000; }
+            10% { transform: translate(-2px, -2px) rotate(-2deg); color: #00ff00; }
+            20% { transform: translate(2px, 2px) rotate(2deg); color: #0000ff; }
+            30% { transform: translate(-2px, 2px) rotate(0deg); color: #ff00ff; }
+            40% { transform: translate(2px, -2px) rotate(1deg); color: #ffff00; }
+            50% { transform: translate(0, 0) rotate(0deg); color: #00ffff; }
+            100% { transform: translate(0, 0) rotate(0deg); color: #ff0000; }
+        }
+
+        /* --- Layout Containers --- */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .screen {
+            display: none;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Menu Buttons --- */
+        .btn-grid {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            width: 100%;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        button.secondary {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+        button.danger {
+            background: var(--error);
+            color: white;
+        }
+        
+        button.quit-btn {
+            background: transparent;
+            color: var(--light-text);
+            border: 2px solid #e2e8f0;
+            padding: 5px 15px;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        
+        button.quit-btn:hover {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        button.lifeline {
+            background: #8b5cf6;
+            font-size: 0.9rem;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* --- Quiz Interface --- */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--light-text);
+            font-weight: 600;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: var(--text);
+            text-align: left;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: var(--success);
+            color: #166534;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: var(--error);
+            color: #991b1b;
+        }
+
+        .option-btn.eliminated {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #f1f5f9;
+        }
+
+        /* --- Settings --- */
+        .setting-group {
+            margin-bottom: 20px;
+        }
+        
+        .setting-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        /* --- Show All List --- */
+        #list-content {
+            max-height: 70vh;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .list-item {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .list-item:nth-child(even) { background: #f8fafc; }
+        .list-q { font-weight: 700; margin-bottom: 5px; }
+        .list-a { color: var(--success); font-weight: 600; }
+
+        /* --- Results --- */
+        .badge {
+            font-size: 3rem;
+            margin: 20px 0;
+            display: block;
+            text-align: center;
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* --- Goodbye Screen --- */
+        #goodbye-screen {
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--light-text);
+            font-size: 0.8rem;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        /* Confetti Canvas */
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="IMG_1496.JPG" alt="Avatar" class="avatar" onerror="this.style.display='none'">
+        <h1>Pharma <span class="rgb-shake">FINAL</span></h1>
+    </header>
+
+    <div class="container">
+        
+        <div id="main-menu" class="screen active">
+            <h2>Welcome</h2>
+            <p>Select a mode to begin:</p>
+            <div class="btn-grid">
+                <button onclick="setupQuiz('study')">📖 Study Mode</button>
+                <button onclick="setupQuiz('exam')">⏱️ Exam Test</button>
+                <button class="secondary" onclick="showSettings()">⚙️ Settings</button>
+                <button class="secondary" onclick="showAllQuestions()">📋 Show All Q&A</button>
+                <button class="danger" onclick="exitApp()">Exit App 🚪</button>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <p>Total Questions in Bank: <span id="total-q-count">0</span></p>
+            </div>
+        </div>
+
+        <div id="settings-screen" class="screen">
+            <h2>Settings</h2>
+            <div class="setting-group">
+                <label>Number of Questions: <span id="q-count-display">50</span></label>
+                <input type="range" id="q-count-slider" min="5" max="400" value="50" oninput="updateSlider(this.value)">
+            </div>
+            <div class="setting-group">
+                <label>Sound Effects</label>
+                <button class="secondary" id="sound-toggle" onclick="toggleSound()">Sound: ON 🔊</button>
+            </div>
+            <button onclick="goHome()">Back to Menu</button>
+        </div>
+
+        <div id="quiz-container" class="screen">
+            <div class="stats-bar">
+                <div>
+                    <span id="score-display">Score: 0</span> | 
+                    <span id="xp-display">XP: 0</span>
+                </div>
+                <button class="quit-btn" onclick="quitQuiz()">Quit X</button>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <button id="lifeline-btn" class="lifeline" onclick="useLifeline()">🪄 50/50 Lifeline (Eliminate 2)</button>
+
+            <div id="question-area">
+                <div class="question-text" id="question-text">Loading...</div>
+                <div class="options-grid" id="options-grid">
+                    </div>
+            </div>
+
+            <div id="feedback-area" style="margin-top: 20px; display: none;">
+                <button onclick="nextQuestion()" id="next-btn">Next Question ➜</button>
+            </div>
+        </div>
+
+        <div id="results-screen" class="screen">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score">0%</div>
+            <div class="badge" id="final-badge">🏆</div>
+            <p style="text-align: center;" id="final-msg">Well done!</p>
+            <div class="btn-grid">
+                <button onclick="goHome()">Back to Main Page</button>
+                <button class="secondary" onclick="setupQuiz(currentMode)">Retry Same Mode</button>
+                <button class="danger" onclick="exitApp()">Exit App</button>
+            </div>
+        </div>
+
+        <div id="list-view" class="screen">
+            <h2>All Questions & Answers</h2>
+            <div id="list-content"></div>
+            <br>
+            <button onclick="goHome()">Back to Menu</button>
+        </div>
+
+        <div id="goodbye-screen" class="screen">
+            <h1>Goodbye! 👋</h1>
+            <p>Thank you for studying.</p>
+            <p style="color: var(--light-text); font-size: 0.9rem; margin-top:20px;">You can now close this tab.</p>
+            <br>
+            <button onclick="location.reload()" class="secondary">Restart App</button>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; AMER ALSHARIF 2026</p>
+    </footer>
+
+    <canvas id="confetti"></canvas>
+
+    <script>
+        // --- DATA EXTRACTION ---
+        
+        const rawData = [
+            { q: "What does the term 'Pathophysiology' literally translate to?", o: ["Study of disease nature", "Study of suffering nature", "Study of normal function", "Study of drug effects"], a: 1 },
+            { q: "Which type of etiology refers to a disease present at birth due to developmental issues?", o: ["Inherited", "Congenital", "Infectious", "Degenerative"], a: 1 },
+            { q: "Which term describes the 'subjective complaints' reported by a patient?", o: ["Signs", "Morphology", "Symptoms", "Complications"], a: 2 },
+            { q: "Fever, rash, and high blood pressure are examples of:", o: ["Symptoms", "Signs", "Etiology", "Sequelae"], a: 1 },
+            { q: "Which pharmacology branch studies 'what the body does to the drug'?", o: ["Pharmacodynamics", "Pharmacokinetics", "Pharmacogenetics", "Pharmacotherapeutics"], a: 1 },
+            { q: "Which pharmacology branch studies 'what the drug does to the body'?", o: ["Pharmacokinetics", "Pharmacodynamics", "Toxicology", "Pharmacovigilance"], a: 1 },
+            { q: "Which name is the 'International Nonproprietary Name' (INN)?", o: ["Chemical Name", "Generic Name", "Brand Name", "Proprietary Name"], a: 1 },
+            { q: "During which phase of drug development is the drug tested on a small number of healthy volunteers?", o: ["Phase I", "Phase II", "Phase III", "Phase IV"], a: 0 },
+            { q: "Phase IV of drug development occurs:", o: ["Before animal testing", "After the drug hits the market", "During large scale clinical trials", "Before IND application"], a: 1 },
+            { q: "Which is NOT one of the 'Six Rights' of medication administration?", o: ["Right Person", "Right Price", "Right Time", "Right Route"], a: 1 },
+            { q: "A 'teratogen' is a substance that:", o: ["Causes cancer", "Disturbs embryo/fetus development", "Causes psychological dependence", "Enhances drug absorption"], a: 1 },
+            { q: "'Physiological Dependence' is characterized by:", o: ["Emotional reliance", "Biochemical changes in tissue", "Use for pleasure only", "No withdrawal symptoms"], a: 1 },
+            { q: "What is the 'First-Pass Effect'?", o: ["Rapid renal excretion", "Metabolism by the liver before systemic circulation", "Absorption through the skin", "Immediate distribution to the brain"], a: 1 },
+            { q: "Bioavailability is defined as:", o: ["The rate of excretion", "The fraction of drug reaching systemic circulation", "The amount of drug in urine", "The toxicity level"], a: 1 },
+            { q: "Which route of administration has 100% bioavailability?", o: ["Oral", "Intravenous (IV)", "Subcutaneous", "Rectal"], a: 1 },
+            { q: "Which transport mechanism requires energy?", o: ["Passive diffusion", "Active transport", "Filtration", "Osmosis"], a: 1 },
+            { q: "Drugs with high lipophilicity (lipid solubility) generally have:", o: ["Poor absorption", "Better penetration into tissues", "Zero bioavailability", "Rapid renal excretion"], a: 1 },
+            { q: "The Volume of Distribution (Vd) correlates dose with:", o: ["Urine concentration", "Plasma concentration at zero time", "Liver enzyme activity", "Biliary excretion"], a: 1 },
+            { q: "The main organ for drug metabolism is:", o: ["Kidney", "Lungs", "Liver", "Skin"], a: 2 },
+            { q: "Phase I metabolism reactions involve:", o: ["Conjugation", "Oxidation, reduction, hydrolysis", "Glucuronidation", "Acetylation"], a: 1 },
+            { q: "Phase II metabolism reactions involve:", o: ["Oxidation", "Conjugation (synthetic)", "Hydrolysis", "Reduction"], a: 1 },
+            { q: "CYP450 inducers (like Rifampicin) will:", o: ["Increase drug levels", "Decrease metabolism of other drugs", "Increase metabolism of other drugs", "Have no effect"], a: 2 },
+            { q: "CYP450 inhibitors (like Chloramphenicol) will:", o: ["Lead to toxicity of other drugs", "Decrease drug efficacy", "Speed up excretion", "Induce enzymes"], a: 0 },
+            { q: "To promote excretion of weak acid drugs (like aspirin), you should:", o: ["Acidify the urine", "Alkalinize the urine", "Neutralize the urine", "Restrict fluids"], a: 1 },
+            { q: "Half-life (t1/2) is the time required to:", o: ["Eliminate 100% of the drug", "Absorb 50% of the drug", "Eliminate 50% of the drug", "Reach peak effect"], a: 2 },
+            { q: "An 'Agonist' drug:", o: ["Blocks receptors", "Binds and activates a receptor", "Has zero efficacy", "Binds without response"], a: 1 },
+            { q: "A 'Competitive Antagonist':", o: ["Binds permanently", "Binds to the same site as agonist but has no efficacy", "Activates the receptor partially", "Binds to an allosteric site"], a: 1 },
+            { q: "Therapeutic Index (TI) is calculated as:", o: ["ED50 / LD50", "LD50 / ED50", "Vd / Clearance", "Dose / Concentration"], a: 1 },
+            { q: "A higher Therapeutic Index (TI) means:", o: ["The drug is more dangerous", "The drug is safer", "The drug is less potent", "The drug is ineffective"], a: 1 },
+            { q: "Pregnancy Category X means:", o: ["Safe for fetus", "Animal studies show risk but benefits outweigh", "Fetal abnormalities reported; contraindicated", "No studies available"], a: 2 },
+            { q: "The Parasympathetic nervous system is known as:", o: ["Fight or Flight", "Rest and Digest", "Stress Response", "Somatic System"], a: 1 },
+            { q: "The Sympathetic nervous system is known as:", o: ["Rest and Digest", "Fight or Flight", "Feed and Breed", "Craniosacral"], a: 1 },
+            { q: "The major neurotransmitter at the Parasympathetic postganglionic nerve ending is:", o: ["Norepinephrine", "Epinephrine", "Acetylcholine (ACh)", "Dopamine"], a: 2 },
+            { q: "The major neurotransmitter at the Sympathetic postganglionic nerve ending (most organs) is:", o: ["Acetylcholine", "Norepinephrine", "Serotonin", "GABA"], a: 1 },
+            { q: "Sympathetic stimulation of the eye causes:", o: ["Miosis (constriction)", "Mydriasis (dilation)", "Tearing", "Closure"], a: 1 },
+            { q: "Parasympathetic stimulation of the heart:", o: ["Increases Heart Rate", "Decreases Heart Rate", "Increases Contractility", "Constricts coronaries"], a: 1 },
+            { q: "Beta-2 receptors are primarily found in:", o: ["Heart", "Lungs (Bronchioles)", "Blood vessels (constriction)", "Kidney"], a: 1 },
+            { q: "Alpha-1 receptors mainly cause:", o: ["Vasodilation", "Vasoconstriction", "Bronchodilation", "Decreased BP"], a: 1 },
+            { q: "Which enzyme breaks down Acetylcholine?", o: ["MAO", "COMT", "Acetylcholinesterase (AChE)", "Tyrosine Hydroxylase"], a: 2 },
+            { q: "Which enzyme metabolizes Norepinephrine?", o: ["AChE", "MAO and COMT", "Amylase", "Lipase"], a: 1 },
+            { q: "Bethanechol is used for:", o: ["Asthma", "Urinary retention", "Hypertension", "Diarrhea"], a: 1 },
+            { q: "Pilocarpine is used to treat:", o: ["Glaucoma", "Hypotension", "Asthma", "Ulcer"], a: 0 },
+            { q: "Neostigmine is a:", o: ["Direct cholinergic agonist", "Acetylcholinesterase inhibitor", "Muscarinic antagonist", "Beta blocker"], a: 1 },
+            { q: "Atropine is the prototype of:", o: ["Muscarinic Agonists", "Muscarinic Antagonists", "Nicotinic Agonists", "Beta Blockers"], a: 1 },
+            { q: "Side effects of Atropine include:", o: ["Diarrhea, Salivation", "Dry mouth, Mydriasis, Tachycardia", "Bradycardia, Urination", "Bronchoconstriction"], a: 1 },
+            { q: "The antidote for Organophosphate (insecticide) poisoning is:", o: ["Pilocarpine", "Atropine + Pralidoxime (2-PAM)", "Propranolol", "Naloxone"], a: 1 },
+            { q: "Edrophonium is used to diagnose:", o: ["Hypertension", "Myasthenia Gravis", "Asthma", "Diabetes"], a: 1 },
+            { q: "Contraindication for Cholinergic Agonists:", o: ["Urinary retention", "Glaucoma", "Asthma/COPD", "Dry mouth"], a: 2 },
+            { q: "Epinephrine is used for:", o: ["Hypertension", "Anaphylactic shock", "Angina", "Insomnia"], a: 1 },
+            { q: "Albuterol (Salbutamol) is a selective:", o: ["Alpha-1 Agonist", "Beta-1 Agonist", "Beta-2 Agonist", "Muscarinic Antagonist"], a: 2 },
+            { q: "Clonidine acts as a:", o: ["Alpha-1 Agonist", "Alpha-2 Agonist", "Beta Blocker", "Alpha Blocker"], a: 1 },
+            { q: "Prazosin is a selective:", o: ["Alpha-1 Blocker", "Beta-2 Agonist", "Alpha-2 Agonist", "Beta-1 Blocker"], a: 0 },
+            { q: "Atenolol is a selective:", o: ["Alpha Blocker", "Beta-1 Blocker", "Beta-2 Blocker", "Non-selective Beta Blocker"], a: 1 },
+            { q: "Propranolol is contraindicated in asthmatics because:", o: ["It blocks Alpha-1", "It blocks Beta-2 causing bronchospasm", "It increases heart rate", "It causes cough"], a: 1 },
+            { q: "The 'Cheese Reaction' (Hypertensive crisis) occurs with:", o: ["SSRIs", "MAO Inhibitors", "TCAs", "Benzodiazepines"], a: 1 },
+            { q: "Tamsulosin is used for:", o: ["Asthma", "Benign Prostatic Hyperplasia (BPH)", "Hypotension", "Glaucoma"], a: 1 },
+            { q: "Which neurotransmitter is the main Inhibitory NT in the CNS?", o: ["Glutamate", "GABA", "Dopamine", "Norepinephrine"], a: 1 },
+            { q: "Which neurotransmitter is the main Excitatory NT in the CNS?", o: ["GABA", "Serotonin", "Glutamate", "Glycine"], a: 2 },
+            { q: "Benzodiazepines mechanism of action:", o: ["Block Na+ channels", "Facilitate GABA action at GABA-A receptors", "Stimulate Glutamate", "Block Ca++ channels"], a: 1 },
+            { q: "The antidote for Benzodiazepine overdose is:", o: ["Naloxone", "Flumazenil", "Atropine", "Vitamin K"], a: 1 },
+            { q: "Barbiturates are less safe than Benzodiazepines because:", o: ["They have a high therapeutic index", "They can cause fatal respiratory depression/coma", "They do not cause dependence", "They are not metabolized"], a: 1 },
+            { q: "Short-acting Benzodiazepine used for anesthesia induction:", o: ["Diazepam", "Midazolam", "Clonazepam", "Lorazepam"], a: 1 },
+            { q: "Biogenic Amine Hypothesis suggests depression is due to:", o: ["Excess Dopamine", "Deficiency of NE, Serotonin (5-HT), or Dopamine", "Excess GABA", "Deficiency of Acetylcholine"], a: 1 },
+            { q: "SSRIs include which drug?", o: ["Amitriptyline", "Fluoxetine", "Phenelzine", "Venlafaxine"], a: 1 },
+            { q: "The '3 Cs' of Tricyclic Antidepressant (TCA) toxicity are:", o: ["Cough, Cold, Congestion", "Coma, Convulsions, Cardiotoxicity", "Constipation, Confusion, Cataracts", "Cyanosis, Cramps, Confusion"], a: 1 },
+            { q: "MAO Inhibitors (like Phenelzine) require dietary restriction of:", o: ["Sugar", "Tyramine (aged cheese, wine)", "Gluten", "Salt"], a: 1 },
+            { q: "Amitriptyline is a:", o: ["SSRI", "TCA", "MAOI", "Benzodiazepine"], a: 1 },
+            { q: "Phenytoin mechanism of action:", o: ["Blocks Ca++ channels", "Blocks Na+ channels", "Enhances GABA", "Blocks Glutamate"], a: 1 },
+            { q: "Ethosuximide is the drug of choice for:", o: ["Grand mal seizures", "Absence seizures", "Status Epilepticus", "Partial seizures"], a: 1 },
+            { q: "Valproic Acid mechanism:", o: ["Blocks Na+ only", "Blocks Ca++ only", "Enhances GABA and blocks Na+/Ca++", "Unknown"], a: 2 },
+            { q: "Status Epilepticus is typically treated initially with IV:", o: ["Phenytoin", "Benzodiazepine (Diazepam/Lorazepam)", "Carbamazepine", "Ethosuximide"], a: 1 },
+            { q: "Gingival Hyperplasia is a common side effect of:", o: ["Valproic acid", "Phenytoin", "Carbamazepine", "Lamotrigine"], a: 1 },
+            { q: "Morphine acts primarily on which receptor?", o: ["Kappa", "Delta", "Mu", "Alpha"], a: 2 },
+            { q: "The triad of Opioid overdose includes:", o: ["Hypertension, Tachycardia, Mydriasis", "Coma, Respiratory Depression, Miosis (Pinpoint pupils)", "Seizures, Hyperthermia, Diarrhea", "Anxiety, Insomnia, Tremor"], a: 1 },
+            { q: "The antidote for Opioid overdose is:", o: ["Flumazenil", "Naloxone", "Naltrexone", "Methadone"], a: 1 },
+            { q: "Which is a strong opioid agonist?", o: ["Codeine", "Morphine", "Loperamide", "Tramadol"], a: 1 },
+            { q: "Codeine is often used for:", o: ["Anesthesia", "Cough suppression (Antitussive)", "Status epilepticus", "Hypertension"], a: 1 },
+            { q: "Parkinson's disease is characterized by a loss of:", o: ["Serotonin in cortex", "Dopamine in Substantia Nigra", "Acetylcholine in Hippocampus", "GABA in Spinal Cord"], a: 1 },
+            { q: "Levodopa is given with Carbidopa to:", o: ["Increase peripheral metabolism", "Prevent peripheral conversion of L-Dopa to Dopamine", "Enhance renal excretion", "Reduce BBB penetration"], a: 1 },
+            { q: "Alzheimer's disease is characterized by deficiency of:", o: ["Dopamine", "Acetylcholine", "Norepinephrine", "Serotonin"], a: 1 },
+            { q: "Donepezil treats Alzheimer's by:", o: ["Blocking NMDA receptors", "Inhibiting Acetylcholinesterase", "Increasing Dopamine", "Blocking Serotonin"], a: 1 },
+            { q: "Memantine mechanism of action:", o: ["AChE Inhibitor", "NMDA Receptor Antagonist", "Dopamine Agonist", "GABA Agonist"], a: 1 },
+            { q: "Local anesthetics (Lidocaine) work by:", o: ["Blocking K+ channels", "Blocking Voltage-gated Na+ channels", "Enhancing GABA", "Blocking Ca++ channels"], a: 1 },
+            { q: "Propofol is used for:", o: ["Local anesthesia", "Induction of General Anesthesia", "Treating depression", "Treating pain only"], a: 1 },
+            { q: "A side effect of Inhaled Anesthetics (like Halothane) can be:", o: ["Malignant Hyperthermia", "Hypertensive crisis", "Gingival hyperplasia", "Insomnia"], a: 0 },
+            { q: "'Idiopathic' etiology means:", o: ["Caused by virus", "Unknown cause", "Caused by doctor", "Genetic cause"], a: 1 },
+            { q: "'Iatrogenic' disease is caused by:", o: ["Genes", "Medical treatment/Physician", "Bacteria", "Aging"], a: 1 },
+            { q: "Hypertrophy refers to:", o: ["Increase in cell number", "Increase in cell size", "Change in cell type", "Cell death"], a: 1 },
+            { q: "Atrophy refers to:", o: ["Increase in size", "Decrease in cell size/function", "Disordered growth", "Programmed cell death"], a: 1 },
+            { q: "Apoptosis is:", o: ["Accidental cell death", "Programmed cell death", "Infection", "Cancer"], a: 1 },
+            { q: "Necrosis is:", o: ["Programmed death", "Uncontrolled cell death/injury", "Cell division", "Cell shrinkage"], a: 1 },
+            { q: "Which is a 'Sign'?", o: ["Headache", "Nausea", "Blood Pressure 140/90", "Fatigue"], a: 2 },
+            { q: "Which is a 'Symptom'?", o: ["Vomiting", "Dizziness", "Rash", "Tachycardia on ECG"], a: 1 },
+            { q: "Oral administration advantages:", o: ["100% bioavailability", "Immediate effect", "Convenient and safe", "Bypasses liver"], a: 2 },
+            { q: "Sublingual administration bypasses:", o: ["Absorption", "First-pass metabolism", "Distribution", "Excretion"], a: 1 },
+            { q: "Rectal administration is useful when:", o: ["Patient is vomiting", "100% absorption is needed", "Slow effect is desired", "Patient is conscious"], a: 0 },
+            { q: "Intrathecal injection goes into:", o: ["Muscle", "Vein", "Subarachnoid space (CSF)", "Skin"], a: 2 },
+            { q: "Which plasma protein binds acidic drugs most?", o: ["Globulin", "Albumin", "Fibrinogen", "Hemoglobin"], a: 1 },
+            { q: "Drug Clearance (CL) is:", o: ["Volume of plasma cleared of drug per unit time", "Amount of drug excreted", "Rate of absorption", "Half-life"], a: 0 },
+            { q: "Zero-order kinetics means:", o: ["Constant percentage eliminated", "Constant amount eliminated per unit time", "Rate depends on concentration", "Variable half-life"], a: 1 },
+            { q: "First-order kinetics means:", o: ["Constant amount eliminated", "Constant fraction (%) eliminated per unit time", "Independent of concentration", "Linear absorption"], a: 1 },
+            { q: "Loading dose is used to:", o: ["Reach steady state rapidly", "Maintain steady state", "Minimize toxicity", "Test for allergy"], a: 0 },
+            { q: "Potency refers to:", o: ["Maximum effect", "Dose required to produce an effect", "Safety", "Duration"], a: 1 },
+            { q: "Efficacy refers to:", o: ["Dose required", "Maximal response (Emax) a drug can produce", "Toxicity", "Cost"], a: 1 },
+            { q: "An 'Inverse Agonist':", o: ["Does nothing", "Produces opposite effect to agonist", "Blocks agonist", "Enhances agonist"], a: 1 },
+            { q: "Tachyphylaxis is:", o: ["Slow tolerance", "Rapid development of tolerance", "Drug allergy", "Increased sensitivity"], a: 1 },
+            { q: "Horner's Syndrome involves:", o: ["Mydriasis", "Miosis, Ptosis, Anhidrosis", "Sweating", "Tachycardia"], a: 1 },
+            { q: "Botulinum Toxin mechanism:", o: ["Stimulates ACh release", "Inhibits ACh release", "Blocks ACh receptors", "Inhibits AChE"], a: 1 },
+            { q: "Cocaine mechanism on adrenergic transmission:", o: ["Inhibits MAO", "Inhibits NET (Norepinephrine Reuptake)", "Stimulates release", "Blocks receptors"], a: 1 },
+            { q: "Amphetamine mechanism:", o: ["Direct agonist", "Releaser of NE and DA", "Blocker", "Inhibitor of synthesis"], a: 1 },
+            { q: "Tyramine is metabolized by:", o: ["COMT", "MAO-A", "AChE", "CYP450"], a: 1 },
+            { q: "Phenylephrine is often used as:", o: ["Nasal decongestant", "Bronchodilator", "Muscle relaxant", "Anticoagulant"], a: 0 },
+            { q: "Dobutamine is used for:", o: ["Asthma", "Heart Failure (Cardiac decompensation)", "Hypertension", "Arrhythmia"], a: 1 },
+            { q: "Yohimbine is a:", o: ["Alpha-1 blocker", "Alpha-2 blocker", "Beta blocker", "Muscarinic blocker"], a: 1 },
+            { q: "Beta-blocker mask symptoms of:", o: ["Hyperglycemia", "Hypoglycemia (tremor/tachycardia)", "Hypertension", "Fever"], a: 1 },
+            { q: "Labetalol blocks:", o: ["Alpha-1 only", "Beta only", "Alpha-1 and Beta receptors", "Muscarinic receptors"], a: 2 },
+            { q: "Pharmacological treatment of Insomnia often targets:", o: ["GABA-A receptors", "Dopamine receptors", "Opioid receptors", "Beta receptors"], a: 0 },
+            { q: "Zolpidem (Ambien) acts on:", o: ["GABA-A (BZ1 site)", "Serotonin receptors", "Histamine receptors", "Melatonin receptors"], a: 0 },
+            { q: "Buspirone is an anxiolytic that:", o: ["Is a Benzodiazepine", "Acts on Serotonin (5-HT1A)", "Causes heavy sedation", "Is addictive"], a: 1 },
+            { q: "Lithium is used for:", o: ["Depression only", "Bipolar Disorder (Mania)", "Schizophrenia", "Anxiety"], a: 1 },
+            { q: "Mechanism of Lithium:", o: ["Inositol depletion", "Dopamine block", "GABA enhancement", "Na+ block"], a: 0 },
+            { q: "Clozapine is an antipsychotic known for causing:", o: ["Agranulocytosis", "Hypertension", "Insomnia", "Weight loss"], a: 0 },
+            { q: "Haloperidol mechanism:", o: ["Blocks D2 receptors", "Stimulates 5-HT", "Enhances GABA", "Blocks Alpha receptors"], a: 0 },
+            { q: "Extrapyramidal Symptoms (EPS) are caused by blockade of:", o: ["Nigrostriatal Dopamine", "Mesolimbic Dopamine", "Cortical Serotonin", "Spinal Glycine"], a: 0 },
+            { q: "Tardive Dyskinesia is:", o: ["Acute dystonia", "Late-onset irreversible involuntary movements", "Restlessness", "Tremor"], a: 1 },
+            { q: "Neuroleptic Malignant Syndrome (NMS) involves:", o: ["Hypothermia", "Rigidity, Hyperthermia, Autonomic instability", "Diarrhea", "Miosis"], a: 1 },
+            { q: "Fentanyl is:", o: ["Weaker than morphine", "100x more potent than morphine", "An antagonist", "A NSAID"], a: 1 },
+            { q: "Methadone is used for:", o: ["Short term pain", "Opioid detoxification/maintenance", "Anesthesia induction", "Diarrhea"], a: 1 },
+            { q: "Tramadol mechanism:", o: ["Weak Mu agonist + inhibits 5-HT/NE reuptake", "Strong Mu agonist", "Kappa agonist", "Cox inhibitor"], a: 0 },
+            { q: "Aspirin mechanism:", o: ["Reversible COX inhibitor", "Irreversible COX-1 and COX-2 inhibitor", "Opioid agonist", "Na+ blocker"], a: 1 },
+            { q: "Acetaminophen (Paracetamol) toxicity affects:", o: ["Kidney", "Liver (Hepatotoxicity)", "Stomach", "Heart"], a: 1 },
+            { q: "Antidote for Acetaminophen toxicity:", o: ["Naloxone", "N-acetylcysteine (NAC)", "Flumazenil", "Atropine"], a: 1 },
+            { q: "Celecoxib is a:", o: ["Non-selective NSAID", "Selective COX-2 inhibitor", "Opioid", "Steroid"], a: 1 },
+            { q: "Ketamine is a:", o: ["GABA agonist", "NMDA antagonist", "Opioid", "Cholinergic"], a: 1 },
+            { q: "Which receptor subtype is mainly responsible for Bronchodilation?", o: ["Alpha-1", "Beta-1", "Beta-2", "Muscarinic M3"], a: 2 },
+            { q: "The drug Sertraline belongs to which class?", o: ["SSRI", "TCA", "Benzodiazepine", "Opioid"], a: 0 },
+            { q: "What is a common side effect of Benzodiazepines?", o: ["Cough", "Sedation", "Hypertension", "Insomnia"], a: 1 },
+            { q: "Asthma is characterized as a chronic inflammatory disease of the airways with which specific feature?", o: ["Continuous irreversible obstruction", "Episodes of acute bronchoconstriction", "Destruction of alveolar walls", "Excessive production of fibrous tissue"], a: 1 },
+            { q: "Which of the following drugs is a known trigger for asthma?", o: ["Acetaminophen", "Aspirin (NSAIDs)", "Antihistamines", "Corticosteroids"], a: 1 },
+            { q: "Pathophysiologically, airway obstruction in asthma results from all of the following EXCEPT:", o: ["Contraction of bronchial smooth muscle", "Inflammation of the bronchial wall", "Destruction of alveoli", "Increased secretion of mucus"], a: 2 },
+            { q: "Mast cell degranulation in asthma primarily releases which of the following mediators?", o: ["Insulin", "Histamine and TNF-α", "Adrenaline", "Acetylcholine"], a: 1 },
+            { q: "Which of the following is NOT a typical clinical feature of asthma?", o: ["Wheezing", "Chest tightness", "Rapid respiration", "Weight gain"], a: 3 },
+            { q: "How is Chronic Obstructive Pulmonary Disease (COPD) characterized regarding airflow obstruction?", o: ["Fully reversible", "Irreversible and usually progressive", "Acute and temporary", "Only occurs at night"], a: 1 },
+            { q: "What is the primary etiology associated with COPD?", o: ["Viral infection", "Long-term smoking", "Allergens", "Stress"], a: 1 },
+            { q: "Which two disease components make up the pathophysiology of COPD?", o: ["Asthma and Rhinitis", "Chronic bronchitis and Emphysema", "Sinusitis and Pharyngitis", "Tuberculosis and Pneumonia"], a: 1 },
+            { q: "Which symptom is specifically noted for COPD involving the production of sputum?", o: ["Dry cough", "Cough with sputum", "Sneezing", "Watery eyes"], a: 1 },
+            { q: "Bronchodilators are most effective for which phase of the asthmatic response?", o: ["Late-phase response", "Immediate-phase response", "Chronic remodeling", "Infection phase"], a: 1 },
+            { q: "What is the mechanism of action of Beta-2 adrenoceptor agonists?", o: ["Block M3 receptors", "Stimulate Beta-2 receptors causing smooth muscle relaxation", "Inhibit PDE enzyme", "Block calcium channels"], a: 1 },
+            { q: "Which drug is classified as a Short-Acting Beta Agonist (SABA) for quick relief?", o: ["Salmeterol", "Salbutamol", "Ipratropium", "Theophylline"], a: 1 },
+            { q: "Which drug is a Long-Acting Beta Agonist (LABA)?", o: ["Salbutamol", "Salmeterol", "Prednisolone", "Codeine"], a: 1 },
+            { q: "Caution should be exercised when using Beta-2 agonists in patients with:", o: ["Liver failure", "Cardiovascular disease and arrhythmias", "Kidney stones", "Peptic ulcers"], a: 1 },
+            { q: "What is the mechanism of action for Anticholinergic drugs in respiratory disease?", o: ["Stimulate Beta-2 receptors", "Block Muscarinic receptors (M3)", "Inhibit Leukotrienes", "Stimulate Alpha receptors"], a: 1 },
+            { q: "Identify the Anticholinergic drug mentioned in the lecture:", o: ["Salbutamol", "Ipratropium bromide", "Montelukast", "Fluticasone"], a: 1 },
+            { q: "Ipratropium is particularly useful in patients who:", o: ["Have mild asthma", "Cannot tolerate adrenergic agonists", "Are children", "Have allergies"], a: 1 },
+            { q: "Xanthines cause bronchodilation by increasing levels of which molecule?", o: ["AMP", "cAMP", "GMP", "ATP"], a: 1 },
+            { q: "Which enzyme do Xanthines inhibit?", o: ["Cyclooxygenase", "Phosphodiesterase", "Lipoxygenase", "ATPase"], a: 1 },
+            { q: "Which drug is a Xanthine derivative?", o: ["Theophylline", "Zafirlukast", "Budesonide", "Cetirizine"], a: 0 },
+            { q: "Corticosteroids reduce bronchial hyperresponsiveness by:", o: ["Relaxing smooth muscle directly", "Depressing the inflammatory response", "Blocking histamine receptors", "Stimulating cough reflex"], a: 1 },
+            { q: "Which of the following is NOT an effect of corticosteroids?", o: ["Reduced mucosal edema", "Decreased prostaglandin generation", "Reduced eosinophil infiltration", "Direct smooth muscle relaxation"], a: 3 },
+            { q: "Which drug is an Inhaled Corticosteroid (ICS)?", o: ["Salbutamol", "Beclomethasone", "Montelukast", "Loratadine"], a: 1 },
+            { q: "What is a potential serious adverse effect of chronic oral corticosteroid use?", o: ["Cushing's syndrome", "Liver failure", "Hypotension", "Sedation"], a: 0 },
+            { q: "For COPD, long-term treatment with corticosteroids is:", o: ["Highly recommended", "The first line of defense", "Not recommended", "Used for all patients"], a: 2 },
+            { q: "Montelukast and Zafirlukast work by acting as antagonists at which receptor?", o: ["M3 receptors", "LTD4 receptors", "Beta-2 receptors", "H1 receptors"], a: 1 },
+            { q: "Zileuton functions by inhibiting which enzyme?", o: ["Phosphodiesterase", "Cyclooxygenase", "Lipoxygenase (LOX)", "Monoamine oxidase"], a: 2 },
+            { q: "Leukotriene antagonists are used prophylactically for asthma, including that induced by:", o: ["Viruses", "Aspirin (ASA)", "Bacteria", "Food"], a: 1 },
+            { q: "Allergic rhinitis is inflammation of the mucous membranes of the:", o: ["Lungs", "Nose", "Throat", "Eyes"], a: 1 },
+            { q: "The pathophysiology of allergic rhinitis involves foreign material interacting with mast cells coated with:", o: ["IgG", "IgM", "IgE", "IgA"], a: 2 },
+            { q: "Which of the following is NOT a clinical feature of allergic rhinitis?", o: ["Sneezing", "Watery rhinorrhea", "Nasal congestion", "Chest pain"], a: 3 },
+            { q: "Diphenhydramine is classified as:", o: ["First-generation antihistamine", "Second-generation antihistamine", "Decongestant", "Corticosteroid"], a: 0 },
+            { q: "Why are first-generation antihistamines often not preferred?", o: ["They are ineffective", "They cause sedation and performance impairment", "They are too expensive", "They cause insomnia"], a: 1 },
+            { q: "Which of the following is a Second-generation antihistamine?", o: ["Chlorpheniramine", "Diphenhydramine", "Loratadine", "Ephedrine"], a: 2 },
+            { q: "Nasal decongestants like Ephedrine work by causing:", o: ["Vasodilation", "Vasoconstriction of nasal blood vessels", "Increased mucus secretion", "Bronchodilation"], a: 1 },
+            { q: "A common side effect of stopping nasal decongestants after long use is:", o: ["Rebound nasal congestion", "Hypotension", "Sedation", "Diarrhea"], a: 0 },
+            { q: "Intranasal corticosteroids (like Budesonide) generally have:", o: ["High systemic absorption", "Minimal systemic absorption", "Severe systemic side effects", "No side effects"], a: 1 },
+            { q: "A local side effect of intranasal corticosteroids is:", o: ["Cushing's syndrome", "Nosebleed (Epistaxis)", "Drowsiness", "Hypertension"], a: 1 },
+            { q: "Coughing is primarily a defense mechanism in response to:", o: ["Oxygen deprivation", "Irritants", "Low blood pressure", "High heart rate"], a: 1 },
+            { q: "Antitussives are drugs that:", o: ["Increase cough production", "Inhibit the cough reflex", "Thin the mucus", "Dilate airways"], a: 1 },
+            { q: "Which drug is an Opioid Antitussive?", o: ["Dextromethorphan", "Codeine", "Guaifenesin", "Acetylcysteine"], a: 1 },
+            { q: "Dextromethorphan is a synthetic derivative of morphine that:", o: ["Has strong analgesic effects", "Has no analgesic effects in antitussive doses", "Causes severe pain", "Is highly addictive"], a: 1 },
+            { q: "Side effects of antitussives may include:", o: ["Insomnia", "Drowsiness or dizziness", "Diarrhea", "Hyperactivity"], a: 1 },
+            { q: "Guaifenesin is used as:", o: ["A cough suppressant", "An expectorant", "A bronchodilator", "An antihistamine"], a: 1 },
+            { q: "N-acetylcysteine works by:", o: ["Blocking cough reflex", "Breaking down respiratory mucus", "Relaxing smooth muscle", "Blocking histamine"], a: 1 },
+            { q: "The priority in treating cough should always be to:", o: ["Suppress the cough immediately", "Treat the underlying cause", "Give antibiotics", "Use steroids"], a: 1 },
+            { q: "Which class of drugs acts by reducing receptor activation in the cough reflex (e.g., Menthol)?", o: ["Central antitussives", "Peripheral agents", "Mucolytics", "Expectorants"], a: 1 },
+            { q: "Salbutamol is to 'Quick Relief' as Salmeterol is to:", o: ["Anti-inflammatory", "Long Acting", "Cough suppression", "Mucolytic"], a: 1 },
+            { q: "Which of the following drugs is an anti-leukotriene agent?", o: ["Ipratropium", "Zafirlukast", "Theophylline", "Codeine"], a: 1 },
+            { q: "Which receptor subtype is mainly responsible for Heart Rate Increase?", o: ["Alpha-1", "Beta-1", "Beta-2", "Muscarinic M3"], a: 1 },
+            { q: "Which of the following is considered a 'Defensive Factor' protecting the stomach mucosa?", o: ["Pepsin", "H. pylori", "Prostaglandins", "NSAIDs"], a: 2 },
+            { q: "Which of the following is an 'Aggravating Factor' that damages the stomach lining?", o: ["Bicarbonate", "Mucus", "NSAIDs", "Tight junctions"], a: 2 },
+            { q: "The gastric mucous barrier protects the epithelium from:", o: ["Bicarbonate", "Prostaglandins", "Harsh acid conditions", "Blood flow"], a: 2 },
+            { q: "Prostaglandins E2 and I2 exert a cytoprotective action by:", o: ["Decreasing blood flow", "Increasing mucosal blood flow", "Increasing HCl production", "Killing bacteria directly"], a: 1 },
+            { q: "Peptic Ulcer Disease (PUD) is defined as a lesion in the mucosa caused by the digestive action of:", o: ["Bile and Lipase", "Pepsin and HCl", "Insulin and Glucose", "Serotonin and Dopamine"], a: 1 },
+            { q: "Pain from a Duodenal Ulcer typically occurs:", o: ["Immediately after eating", "2-5 hours after a meal", "During the meal", "It is constant"], a: 1 },
+            { q: "Which type of ulcer is associated with weight loss?", o: ["Duodenal Ulcer", "Gastric Ulcer", "Both", "Neither"], a: 1 },
+            { q: "In a Gastric Ulcer, food typically:", o: ["Relieves the pain", "Aggravates the pain", "Has no effect", "Causes gas only"], a: 1 },
+            { q: "In a Duodenal Ulcer, food typically:", o: ["Relieves the pain", "Aggravates the pain", "Causes vomiting", "Causes weight loss"], a: 0 },
+            { q: "Vomiting is considered 'Common' in which type of ulcer?", o: ["Duodenal Ulcer", "Gastric Ulcer", "Esophageal Ulcer", "All of the above"], a: 1 },
+            { q: "The commonest cause of GERD is:", o: ["H. pylori infection", "Loss of tone of the lower esophageal sphincter (LES)", "Too much mucus", "Low abdominal pressure"], a: 1 },
+            { q: "Which of the following is a precipitant for GERD?", o: ["Weight loss", "Standing upright", "Obesity", "Drinking water"], a: 2 },
+            { q: "A clinical feature of GERD that is often mistaken for Myocardial Infarction is:", o: ["Diarrhea", "Heartburn", "Headache", "Constipation"], a: 1 },
+            { q: "Omeprazole and Lansoprazole belong to which drug class?", o: ["H2 Receptor Blockers", "Antacids", "Proton Pump Inhibitors (PPIs)", "Mucosal Protective Agents"], a: 2 },
+            { q: "What is the mechanism of action of Proton Pump Inhibitors?", o: ["Neutralize existing acid", "Irreversible inhibition of the H+/K+ ATPase pump", "Block H2 receptors", "Block M1 receptors"], a: 1 },
+            { q: "Which drug class is preferred for the eradication of H. pylori?", o: ["Antacids", "PPIs", "H2 Blockers", "Laxatives"], a: 1 },
+            { q: "Common adverse effects of PPIs include:", o: ["Dry mouth", "Diarrhea, headache, and abdominal pain", "Hypertension", "Tachycardia"], a: 1 },
+            { q: "Ranitidine and Famotidine are examples of:", o: ["PPIs", "H2 Receptor Blockers", "Antacids", "Antiemetics"], a: 1 },
+            { q: "The mechanism of action of H2 Receptor Blockers is:", o: ["Irreversible inhibition of proton pump", "Neutralizing acid", "Competitively reversible blocking of H2 receptors", "Coating the ulcer"], a: 2 },
+            { q: "Antacids work by:", o: ["Inhibiting acid secretion", "Reacting with gastric acid to form water and salt (neutralization)", "Blocking H2 receptors", "Killing H. pylori"], a: 1 },
+            { q: "A specific adverse effect of Aluminum Hydroxide antacids is:", o: ["Diarrhea", "Constipation", "Headache", "Vomiting"], a: 1 },
+            { q: "A specific adverse effect of Magnesium Hydroxide antacids is:", o: ["Diarrhea", "Constipation", "Dry mouth", "Tremors"], a: 0 },
+            { q: "Antacids are contraindicated in patients with:", o: ["Liver failure", "Renal impairment", "Asthma", "Diabetes"], a: 1 },
+            { q: "Misoprostol is a synthetic analog of:", o: ["Histamine", "Prostaglandin E1", "Dopamine", "Serotonin"], a: 1 },
+            { q: "Misoprostol is specifically indicated for:", o: ["Motion sickness", "NSAID-induced ulcers", "H. pylori eradication", "Diarrhea"], a: 1 },
+            { q: "Why is Misoprostol contraindicated in pregnancy?", o: ["It causes birth defects", "It stimulates uterine contractions (miscarriage risk)", "It causes high blood pressure", "It causes severe vomiting"], a: 1 },
+            { q: "Standard 'Triple Therapy' for H. pylori consists of a PPI plus:", o: ["Amoxicillin + Metronidazole", "Clarithromycin + Amoxicillin", "Tetracycline + Bismuth", "Ranitidine + Antacid"], a: 1 },
+            { q: "If a patient is allergic to Penicillin, which drug replaces Amoxicillin in Triple Therapy?", o: ["Tetracycline", "Metronidazole", "Ciprofloxacin", "Vancomycin"], a: 1 },
+            { q: "Quadruple therapy adds which agent to the regimen?", o: ["Misoprostol", "Bismuth chelate", "Sucralfate", "Loperamide"], a: 1 },
+            { q: "The Chemoreceptor Trigger Zone (CTZ) is rich in which receptors?", o: ["H1 and M1", "D2 and 5HT3", "Nicotinic", "Adrenergic"], a: 1 },
+            { q: "Scopolamine is an antagonist of which receptor?", o: ["Dopamine D2", "Histamine H1", "Muscarinic M1", "Serotonin 5HT3"], a: 2 },
+            { q: "Diphenhydramine is used for motion sickness and acts as a:", o: ["D2 antagonist", "H1-receptor antagonist", "5HT3 antagonist", "M1 antagonist"], a: 1 },
+            { q: "Ondansetron is a selective antagonist of:", o: ["Dopamine D2", "Serotonin 5-HT3", "Histamine H1", "Muscarinic M1"], a: 1 },
+            { q: "Domperidone acts by blocking:", o: ["Serotonin receptors", "Dopamine D2 receptors", "Histamine receptors", "Muscarinic receptors"], a: 1 },
+            { q: "Which condition is characterized by diffuse mucosal inflammation limited to the colon?", o: ["Crohn's Disease", "Ulcerative Colitis", "Peptic Ulcer", "Gastroenteritis"], a: 1 },
+            { q: "Which condition is characterized by patchy transmural inflammation that can affect any part of the GI tract?", o: ["Crohn's Disease", "Ulcerative Colitis", "Appendicitis", "Gastritis"], a: 0 },
+            { q: "Tenesmus (feeling of constantly needing to pass stools) is a symptom of:", o: ["Gastric Ulcer", "Ulcerative Colitis", "GERD", "Constipation"], a: 1 },
+            { q: "Mesalamine is generally considered:", o: ["More useful in Ulcerative Colitis", "More useful in Crohn's", "Not useful in IBD", "Only for constipation"], a: 0 },
+            { q: "Bisacodyl is classified as a:", o: ["Bulk laxative", "Osmotic laxative", "Stimulant laxative", "Stool softener"], a: 2 },
+            { q: "Psyllium works by:", o: ["Stimulating nerves", "Causing water retention and distension (Bulk)", "Lubricating the stool", "Emulsifying stool"], a: 1 },
+            { q: "Magnesium citrate acts as an:", o: ["Osmotic laxative", "Emollient", "Lubricant", "Stimulant"], a: 0 },
+            { q: "Docusate is a:", o: ["Stimulant", "Stool softener (Emollient)", "Osmotic agent", "Bulk agent"], a: 1 },
+            { q: "Loperamide works as an antidiarrheal by:", o: ["Blocking dopamine", "Stimulating opioid receptors in the bowel", "Increasing peristalsis", "Killing bacteria"], a: 1 },
+            { q: "A common side effect of Loperamide is:", o: ["Diarrhea", "Abdominal cramps and drowsiness", "Insomnia", "Hyperactivity"], a: 1 },
+            { q: "Oral Rehydration Salts (ORS) contain:", o: ["Only water", "Isotonic/hypotonic citrate and bicarbonate", "Pure glucose", "Pure sodium"], a: 1 },
+            { q: "Chronic use of laxatives can lead to:", o: ["Improved bowel function", "Constipation (Laxative abuse)", "Weight gain", "GERD"], a: 1 },
+            { q: "Mineral oil is classified as a:", o: ["Lubricant laxative", "Osmotic laxative", "Stimulant", "Bulk agent"], a: 0 },
+            { q: "Rotavirus is a common cause of diarrhea in:", o: ["Elderly", "Children", "Pregnant women", "Smokers"], a: 1 },
+            { q: "Surgery is usually curative for which IBD condition?", o: ["Crohn's Disease", "Ulcerative Colitis", "Both", "Neither"], a: 1 },
+            { q: "Which of the following is TRUE regarding Paracetamol compared to Aspirin?", o: ["Paracetamol causes bleeding ulcers", "Paracetamol causes bronchospasm in asthmatics", "Paracetamol has no antiplatelet action", "Paracetamol is toxic to the kidneys in low doses"], a: 2 },
+            { q: "Bacteria are classified as which type of organisms?", o: ["Eukaryotic", "Prokaryotic", "Viral", "Fungal"], a: 1 },
+            { q: "Which bacteria typically appear Blue/Purple after Gram staining?", o: ["Gram Negative", "Gram Positive", "Mycobacteria", "Viruses"], a: 1 },
+            { q: "What is a characteristic feature of the Gram Negative cell wall?", o: ["Thick peptidoglycan layer", "No outer membrane", "Outer lipopolysaccharide layer", "Retains crystal violet"], a: 2 },
+            { q: "Gram Negative bacteria appear what color under the microscope?", o: ["Blue/Purple", "Green", "Pink/Red", "Black"], a: 2 },
+            { q: "Which component is thick in Gram Positive bacteria but thin in Gram Negative bacteria?", o: ["Lipopolysaccharide", "Peptidoglycan", "Plasma membrane", "Cytoplasm"], a: 1 },
+            { q: "An antibiotic that inhibits the growth of bacteria, relying on the host immune system to kill them, is called:", o: ["Bactericidal", "Bacteriostatic", "Antiviral", "Antimetabolite"], a: 1 },
+            { q: "Compounds that directly kill bacteria are termed:", o: ["Bacteriostatic", "Bactericidal", "Prophylactic", "Static"], a: 1 },
+            { q: "Which of the following classes of antibiotics works by inhibiting bacterial cell-wall synthesis?", o: ["Aminoglycosides", "Fluoroquinolones", "Penicillins", "Sulfonamides"], a: 2 },
+            { q: "Cell-wall synthesis inhibitors are generally considered:", o: ["Bacteriostatic", "Bactericidal", "Antiviral", "Ineffective"], a: 1 },
+            { q: "Penicillins inhibit the final step of cell wall synthesis by interacting with:", o: ["Ribosomes (30S)", "DNA Gyrase", "Penicillin-binding proteins (PBPs)", "Folic acid enzymes"], a: 2 },
+            { q: "What is the function of Beta-lactamases produced by bacteria?", o: ["Enhance antibiotic uptake", "Break the lactam ring structure of penicillins", "Synthesize folic acid", "Protect the ribosome"], a: 1 },
+            { q: "Clavulanic acid is often combined with penicillins to:", o: ["Increase renal excretion", "Inhibit beta-lactamase enzymes", "Directly kill bacteria", "Reduce pain"], a: 1 },
+            { q: "Vancomycin is classified as an inhibitor of:", o: ["Protein synthesis", "Nucleic acid synthesis", "Cell-wall synthesis", "Folic acid synthesis"], a: 2 },
+            { q: "Which antibiotic inhibits protein synthesis by binding to the 30S ribosomal subunit?", o: ["Chloramphenicol", "Macrolides", "Aminoglycosides", "Penicillin"], a: 2 },
+            { q: "Macrolides and Clindamycin inhibit protein synthesis by binding to:", o: ["30S subunit", "50S subunit", "DNA Gyrase", "Cell membrane"], a: 1 },
+            { q: "Tetracyclines work by blocking:", o: ["The attachment of aminoacyl tRNA to the acceptor site", "Peptide bond formation", "Translocation", "DNA replication"], a: 0 },
+            { q: "Chloramphenicol inhibits the activity of which enzyme?", o: ["DNA Polymerase", "Peptidyltransferase", "Beta-lactamase", "Dihydrofolate reductase"], a: 1 },
+            { q: "Quinolones (e.g., Ciprofloxacin) are bactericidal drugs that interfere with:", o: ["Cell wall synthesis", "Protein synthesis", "DNA synthesis", "Folic acid synthesis"], a: 2 },
+            { q: "The specific target enzymes of Quinolones are:", o: ["DNA Gyrase and Topoisomerase IV", "RNA Polymerase", "Peptidyltransferase", "Transpeptidase"], a: 0 },
+            { q: "Rifampin exerts its effect by inhibiting:", o: ["DNA synthesis", "DNA-dependent RNA polymerase", "Protein synthesis", "Cell wall"], a: 1 },
+            { q: "Sulfonamides inhibit bacterial growth by blocking the synthesis of:", o: ["Peptidoglycan", "Proteins", "Folic acid", "Cholesterol"], a: 2 },
+            { q: "Which enzyme is inhibited by Trimethoprim?", o: ["Dihydropteroate synthetase", "Dihydrofolate reductase", "DNA Gyrase", "RNA Polymerase"], a: 1 },
+            { q: "When choosing an antibiotic, which of the following is considered a 'Host Factor'?", o: ["Bacterial cell wall type", "Renal and Liver function", "Cost of drug", "Bacterial resistance"], a: 1 },
+            { q: "Which patient population requires special consideration due to potential drug effects on the fetus?", o: ["Athletes", "Pregnancy and Lactation", "Diabetics", "Smokers"], a: 1 },
+            { q: "Bacteriological information (cultures) is important but has disadvantages, including:", o: ["It is always too expensive", "Bacteria may take time to grow (e.g., TB)", "It is never accurate", "It is illegal"], a: 1 },
+            { q: "Antibiotic resistance is defined as when the concentration required to kill bacteria is:", o: ["Lower than the plasma concentration", "Greater than the concentration safely achieved in plasma", "Equal to the water concentration", "Zero"], a: 1 },
+            { q: "Which is a common misuse of antibiotics?", o: ["Treating viral infections (like common cold)", "Using proper dosage", "Taking the full course", "Using for bacterial meningitis"], a: 0 },
+            { q: "To prevent resistance, therapy for Tuberculosis (TB) typically requires:", o: ["A single antibiotic", "A very brief therapy", "Combination of antibiotics", "No treatment"], a: 2 },
+            { q: "Which mechanism of resistance involves pumping the drug out of the cell?", o: ["Inactivation by enzyme", "Altered metabolic pathway", "Active transport (Efflux)", "Reduced permeability"], a: 2 },
+            { q: "PABA is a precursor for:", o: ["Penicillin", "Folic Acid", "DNA", "Cell wall"], a: 1 },
+            { q: "Why is it difficult to develop selective antiviral drugs?", o: ["Viruses have thick cell walls", "Viruses use the host's metabolic machinery", "Viruses are too large", "Viruses are always dormant"], a: 1 },
+            { q: "Viruses differ from bacteria because viruses:", o: ["Have a cell wall", "Are prokaryotic", "Lack a cell wall and metabolic processes", "Reproduce by fission"], a: 2 },
+            { q: "Many antiviral drugs are 'Antimetabolites', which means they:", o: ["Break down the cell wall", "Resemble naturally occurring nucleosides (fake building blocks)", "Increase viral metabolism", "Block host immunity"], a: 1 },
+            { q: "Antimetabolite antivirals are often 'Prodrugs', meaning they require:", o: ["High acidity", "Metabolic activation (e.g., phosphorylation)", "Refrigeration", "Combination with antibiotics"], a: 1 },
+            { q: "Acyclovir is primarily used to treat:", o: ["HIV", "Influenza", "Herpes infections", "Hepatitis"], a: 2 },
+            { q: "Zidovudine is classified as which type of HIV drug?", o: ["Protease Inhibitor", "Reverse Transcriptase Inhibitor (RTI)", "Integrase Inhibitor", "Fusion Inhibitor"], a: 1 },
+            { q: "Ritonavir belongs to which class of antiretrovirals?", o: ["Reverse Transcriptase Inhibitor", "Protease Inhibitor (PI)", "Entry Inhibitor", "CCR5 Antagonist"], a: 1 },
+            { q: "Amantadine acts by inhibiting which step of the viral life cycle?", o: ["Viral release", "Uncoating / Penetration", "Nucleic acid synthesis", "Protein synthesis"], a: 1 },
+            { q: "Neuraminidase inhibitors act at which stage?", o: ["Viral adsorption", "Viral release", "Uncoating", "Replication"], a: 1 },
+            { q: "Fungi differ from bacteria in that fungi are:", o: ["Prokaryotic", "Eukaryotic", "Simple", "Lacking a nucleus"], a: 1 },
+            { q: "The fungal cell wall is composed largely of:", o: ["Peptidoglycan", "LPS", "Chitin", "Cholesterol"], a: 2 },
+            { q: "Amphotericin B works by:", o: ["Inhibiting DNA synthesis", "Binding to ergosterol to form artificial pores", "Blocking protein synthesis", "Inhibiting squalene epoxidase"], a: 1 },
+            { q: "Azole antifungals (e.g., Ketoconazole) inhibit the synthesis of:", o: ["Peptidoglycan", "Ergosterol", "DNA", "RNA"], a: 1 },
+            { q: "Specifically, Azoles inhibit which enzyme?", o: ["14-alpha-demethylase", "Squalene epoxidase", "DNA Gyrase", "Reverse Transcriptase"], a: 0 },
+            { q: "Terbinafine acts by inhibiting:", o: ["14-alpha-demethylase", "Squalene epoxidase", "Ribosomes", "Cell wall synthesis"], a: 1 },
+            { q: "Infectious diseases caused by fungi are called:", o: ["Viremia", "Bacteremia", "Mycoses", "Zoonoses"], a: 2 },
+            { q: "Polyene macrolides include Amphotericin B and:", o: ["Fluconazole", "Nystatin", "Terbinafine", "Ciprofloxacin"], a: 1 },
+            { q: "Fungal membranes contain which sterol that is the target of many antifungals?", o: ["Cholesterol", "Ergosterol", "Lanosterol", "Cortisol"], a: 1 },
+            { q: "Echinocandins (Caspo-fungin) inhibit the synthesis of:", o: ["Ergosterol", "Beta-glucan (Cell wall)", "DNA", "Proteins"], a: 1 },
+            { q: "What is the result of inhibiting Squalene Epoxidase?", o: ["Increase in Ergosterol", "Decrease in Ergosterol", "Increase in DNA", "Cell wall thickening"], a: 1 },
+            { q: "According to the definition of pain, it is an unpleasant experience associated with:", o: ["Only actual tissue damage", "Only potential tissue damage", "Actual or potential tissue damage", "No tissue damage"], a: 2 },
+            { q: "Which of the following is a characteristic of Acute Pain?", o: ["Lasts more than 3 months", "Associated with sympathetic hyperactivity (e.g., tachycardia)", "Associated with vegetative signs like loss of libido", "Does not involve anxiety"], a: 1 },
+            { q: "Chronic pain is typically defined in the lecture as pain lasting more than:", o: ["1 week", "2 weeks", "6 weeks", "1 year"], a: 2 },
+            { q: "Which type of pain arises specifically from nerve damage, such as diabetic neuropathy?", o: ["Nociceptive pain", "Neuropathic pain", "Psychogenic pain", "Mechanical pain"], a: 1 },
+            { q: "'Vegetative signs' such as fatigue, loss of libido, and depressed mood are most commonly associated with:", o: ["Acute pain", "Surgical pain", "Chronic pain", "Fractures"], a: 2 },
+            { q: "Which process involves the conversion of a painful stimulus into an electrical signal at the peripheral nociceptors?", o: ["Transmission", "Modulation", "Perception", "Transduction"], a: 3 },
+            { q: "In the pain pathway, 'Modulation' refers to:", o: ["The initial burn on the skin", "The conscious realization of pain in the brain", "The inhibition or amplification of pain signals in the spinal cord", "The movement of the signal up to the brain"], a: 2 },
+            { q: "Which substance is released in the spinal cord/brainstem to reduce dorsal horn neuron activity and cause analgesia?", o: ["Histamine", "Opioid peptides", "Prostaglandins", "Bradykinin"], a: 1 },
+            { q: "Somatic symptom disorder is an example of which type of pain?", o: ["Nociceptive", "Neuropathic", "Psychogenic", "Acute"], a: 2 },
+            { q: "'Office Syndrome' includes all of the following EXCEPT:", o: ["Neck pain", "Headache", "Back pain", "Appendicitis"], a: 3 },
+            { q: "Step 1 of the WHO Analgesic Ladder recommends using:", o: ["Strong opioids like Morphine", "Weak opioids like Codeine", "Non-opioids (e.g., Paracetamol or NSAIDs)", "General Anesthetics"], a: 2 },
+            { q: "If pain persists or increases after Step 1, the next step (Step 2) includes:", o: ["Strong opioids", "Weak opioids (e.g., Codeine, Tramadol)", "Surgery", "High dose Aspirin only"], a: 1 },
+            { q: "Which drug is an example of a Step 3 'Strong Opioid'?", o: ["Ibuprofen", "Tramadol", "Morphine", "Paracetamol"], a: 2 },
+            { q: "What is 'Multimodal Analgesia'?", o: ["Using a high dose of a single drug", "Using a combination of drugs with different modes of action", "Using only non-pharmacological methods", "Switching drugs every day"], a: 1 },
+            { q: "A key benefit of combining an NSAID with an Opioid (multimodal analgesia) is:", o: ["It increases the side effects of both", "It reduces the amount of opioid required", "It completely numbs the patient", "It induces sleep"], a: 1 },
+            { q: "What is the primary mechanism of action of NSAIDs?", o: ["Increasing serotonin in the CNS", "Blocking Sodium channels", "Inhibition of Cyclooxygenase (COX) enzymes", "Activation of Mu receptors"], a: 2 },
+            { q: "NSAIDs produce their effects by reducing the production of:", o: ["Dopamine", "Prostaglandins (PGs)", "Adrenaline", "Insulin"], a: 1 },
+            { q: "Which enzyme is responsible for converting Arachidonic acid into Prostaglandins?", o: ["Phospholipase A2", "Cyclooxygenase (COX)", "Lipoxygenase", "Protease"], a: 1 },
+            { q: "Aspirin (ASA) is unique because it is a:", o: ["Reversible COX inhibitor", "Non-selective Irreversible COX inhibitor", "Selective COX-2 inhibitor", "Central-only COX inhibitor"], a: 1 },
+            { q: "A low dose of Aspirin (81 mg daily) is primarily used for:", o: ["Anti-inflammatory effects", "Antipyresis (fever reduction)", "Antiplatelet aggregation (blood thinning)", "Severe pain relief"], a: 2 },
+            { q: "To achieve an Anti-inflammatory effect with Aspirin, one must use:", o: ["Low doses", "Moderate doses", "High doses", "No doses (it is not anti-inflammatory)"], a: 2 },
+            { q: "Which of the following is a classic sign of Salicylism (Aspirin toxicity)?", o: ["Tinnitus (ringing in the ears)", "Hypertension", "Constipation", "Bradycardia"], a: 0 },
+            { q: "Reye syndrome is a rare but serious side effect associated with:", o: ["Ibuprofen", "Paracetamol", "Aspirin (ASA)", "Celecoxib"], a: 2 },
+            { q: "Why might Aspirin cause bronchoconstriction (asthma attack)?", o: ["It increases prostaglandins", "It shifts arachidonic acid metabolism toward Leukotrienes", "It blocks histamine receptors", "It relaxes the lungs"], a: 1 },
+            { q: "Diclofenac is described as having:", o: ["Selective COX-1 activity", "Preferential activity on COX-2", "No anti-inflammatory activity", "Only central activity"], a: 1 },
+            { q: "Which NSAID is associated with specific toxicities like thrombocytopenia and agranulocytosis?", o: ["Ibuprofen", "Naproxen", "Indomethacin", "Diclofenac"], a: 2 },
+            { q: "Sulindac is associated with which severe skin reaction?", o: ["Acne", "Stevens-Johnson syndrome", "Eczema", "Psoriasis"], a: 1 },
+            { q: "Celecoxib is classified as a:", o: ["Non-selective COX inhibitor", "Selective COX-2 Inhibitor", "Preferential COX-1 Inhibitor", "Steroid"], a: 1 },
+            { q: "A major advantage of Celecoxib over traditional NSAIDs is:", o: ["Less gastric side effects", "Stronger antiplatelet effect", "Lower cost", "Sedative effect"], a: 0 },
+            { q: "Celecoxib should be used with caution in patients with:", o: ["Asthma", "Cardiac diseases", "Gout", "Depression"], a: 1 },
+            { q: "Which of the following drugs is a reversible inhibitor of both COX-1 and COX-2?", o: ["Aspirin", "Celecoxib", "Ibuprofen", "Paracetamol"], a: 2 },
+            { q: "The mechanism of action of Paracetamol is primarily:", o: ["Peripheral COX inhibition", "Central (Brain) COX inhibition", "Opioid receptor activation", "Sodium channel blockade"], a: 1 },
+            { q: "Unlike NSAIDs, Paracetamol lacks significant:", o: ["Analgesic effects", "Antipyretic effects", "Anti-inflammatory effects", "CNS effects"], a: 2 },
+            { q: "The primary risk of Paracetamol overdose is:", o: ["Stomach ulcers", "Kidney failure", "Hepatotoxicity (Liver damage)", "Respiratory depression"], a: 2 },
+            { q: "The antidote for Paracetamol hepatotoxicity is:", o: ["Naloxone", "N-acetylcysteine", "Flumazenil", "Atropine"], a: 1 },
+            { q: "For maximum effectiveness, the Paracetamol antidote should be given within:", o: ["The first 1 hour", "The first 12 hours", "24 hours", "48 hours"], a: 1 },
+            { q: "Opioids exert their analgesic effects primarily via:", o: ["Alpha receptors", "Beta receptors", "Mu (μ) receptors", "COX enzymes"], a: 2 },
+            { q: "Opioids reduce pain transmission at the dorsal horn by:", o: ["Increasing excitatory neurotransmitters", "Inhibiting excitatory neurotransmitter release", "Blocking sodium channels", "Increasing inflammation"], a: 1 },
+            { q: "Antidepressants used for pain (like Amitriptyline) work by:", o: ["Decreasing serotonin", "Increasing serotonin and noradrenaline in the CNS", "Blocking opioid receptors", "Inducing sleep only"], a: 1 },
+            { q: "Anticonvulsants (like Gabapentin/Pregabalin) relieve pain by:", o: ["Inhibiting the release of excitatory neurotransmitters", "Reducing inflammation", "Acting on opioid receptors", "Blocking COX enzymes"], a: 0 },
+            { q: "Local anesthetics (e.g., Lidocaine) cause a reversible loss of sensation by:", o: ["Blocking Calcium channels", "Blocking Sodium channels", "Activating Opioid receptors", "Inhibiting COX"], a: 1 },
+            { q: "Which of the following is an example of a Selective COX-2 inhibitor?", o: ["Diclofenac", "Meloxicam", "Celecoxib", "Naproxen"], a: 2 },
+            { q: "'Pyresis' refers to:", o: ["Pain", "Inflammation", "Fever", "Clotting"], a: 2 },
+            { q: "Which of the following is NOT a classic sign of inflammation targeted by NSAIDs?", o: ["Pain", "Fever", "Euphoria", "Swelling"], a: 2 },
+            { q: "Which drug class is used for 'Transduction' pain inhibition in the pain pathway?", o: ["Opioids only", "NSAIDs", "Antidepressants", "Alpha-2 Agonists"], a: 1 },
+            { q: "Opioids act on both:", o: ["The liver and kidneys", "The Central and Peripheral nervous systems", "Only the brain", "Only the skin"], a: 1 },
+            { q: "Amitriptyline is classified as a:", o: ["Tricyclic Antidepressant", "SNRI", "SSRI", "Anticonvulsant"], a: 0 },
+            { q: "Duloxetine is an example of:", o: ["Tricyclic Antidepressant", "Serotonin-Noradrenaline Reuptake Inhibitor (SNRI)", "Local Anesthetic", "NSAID"], a: 1 },
+            { q: "The abbreviation 'ASA' stands for:", o: ["Acetylsalicylic Acid", "Amino-salicylic Acid", "Anti-systemic Agent", "Alpha-Stimulating Agent"], a: 0 },
+            { q: "Which drug is a reversible COX inhibitor?", o: ["Aspirin", "Celecoxib", "Ibuprofen", "Paracetamol"], a: 2 }
+        ];
+
+        // --- APP STATE ---
+        let questions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let xp = 0;
+        let currentMode = 'study';
+        let soundEnabled = true;
+        let questionCount = 50;
+        let lifelineUsed = false;
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            document.getElementById('total-q-count').innerText = rawData.length;
+            document.getElementById('q-count-slider').max = rawData.length;
+        };
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function goHome() {
+            showScreen('main-menu');
+        }
+
+        function showSettings() {
+            showScreen('settings-screen');
+        }
+
+        function updateSlider(val) {
+            questionCount = parseInt(val);
+            document.getElementById('q-count-display').innerText = val;
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-toggle').innerText = soundEnabled ? "Sound: ON 🔊" : "Sound: OFF 🔇";
+        }
+        
+        function exitApp() {
+            showScreen('goodbye-screen');
+            playSound('correct');
+            // Try to close window (often blocked by browsers unless script opened it)
+            setTimeout(() => {
+                window.close();
+            }, 1500);
+        }
+        
+        function quitQuiz() {
+            if(confirm("Are you sure you want to quit this quiz?")) {
+                goHome();
+            }
+        }
+
+        // --- QUIZ LOGIC ---
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function setupQuiz(mode) {
+            currentMode = mode;
+            score = 0;
+            xp = 0;
+            currentIndex = 0;
+            lifelineUsed = false;
+            
+            // Randomize and slice
+            let shuffled = shuffle([...rawData]);
+            questions = shuffled.slice(0, questionCount);
+
+            // Reset UI
+            document.getElementById('score-display').innerText = "Score: 0";
+            document.getElementById('xp-display').innerText = "XP: 0";
+            document.getElementById('progress-bar').style.width = '0%';
+            
+            showScreen('quiz-container');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            document.getElementById('question-text').innerText = `${currentIndex + 1}. ${q.q}`;
+            
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            document.getElementById('feedback-area').style.display = 'none';
+            document.getElementById('lifeline-btn').style.display = lifelineUsed ? 'none' : 'block';
+            document.getElementById('lifeline-btn').disabled = false;
+            document.getElementById('lifeline-btn').style.opacity = '1';
+
+            q.o.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<strong>${String.fromCharCode(65+idx)}.</strong> ${opt}`;
+                btn.onclick = () => checkAnswer(idx, btn);
+                btn.id = `opt-${idx}`;
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx, btnElement) {
+            const q = questions[currentIndex];
+            const correctIdx = q.a;
+            const allBtns = document.querySelectorAll('.option-btn');
+
+            // Disable all buttons
+            allBtns.forEach(b => b.style.pointerEvents = 'none');
+            document.getElementById('lifeline-btn').disabled = true;
+
+            if (selectedIdx === correctIdx) {
+                // Correct
+                btnElement.classList.add('correct');
+                playSound('correct');
+                score++;
+                xp += 10;
+                if(currentMode === 'study') triggerConfetti();
+            } else {
+                // Wrong
+                btnElement.classList.add('wrong');
+                playSound('wrong');
+                // Show correct one in study mode
+                if (currentMode === 'study') {
+                    document.getElementById(`opt-${correctIdx}`).classList.add('correct');
+                }
+            }
+
+            // Update stats
+            document.getElementById('score-display').innerText = `Score: ${score}/${questions.length}`;
+            document.getElementById('xp-display').innerText = `XP: ${xp}`;
+            const pct = ((currentIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+
+            // Navigation logic
+            if (currentMode === 'study') {
+                document.getElementById('feedback-area').style.display = 'block';
+            } else {
+                // Exam mode: Auto advance after short delay
+                setTimeout(() => nextQuestion(), 800);
+            }
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                renderQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function useLifeline() {
+            if (lifelineUsed) return;
+            const q = questions[currentIndex];
+            const correctIdx = q.a;
+            let removed = 0;
+            
+            // Randomly remove 2 wrong answers
+            const wrongIndices = [0,1,2,3].filter(i => i !== correctIdx);
+            shuffle(wrongIndices); // randomize the wrong ones
+
+            wrongIndices.slice(0, 2).forEach(idx => {
+                const btn = document.getElementById(`opt-${idx}`);
+                if (btn) btn.classList.add('eliminated');
+            });
+
+            lifelineUsed = true;
+            document.getElementById('lifeline-btn').style.display = 'none';
+            playSound('lifeline');
+        }
+
+        function endQuiz() {
+            showScreen('results-screen');
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('final-score').innerText = `${percentage}%`;
+            
+            let badge = "🥚";
+            let msg = "Keep studying!";
+            
+            if (percentage >= 50) { badge = "💊"; msg = "Pharmacist (Passed)"; }
+            if (percentage >= 80) { badge = "👨‍⚕️"; msg = "Specialist (Great Job!)"; }
+            if (percentage === 100) { badge = "👑"; msg = "LEGEND (Perfect Score!)"; }
+            
+            document.getElementById('final-badge').innerText = badge;
+            document.getElementById('final-msg').innerText = msg;
+            
+            if (percentage >= 50) triggerConfetti();
+            playSound(percentage >= 50 ? 'win' : 'lose');
+        }
+
+        // --- SHOW ALL ---
+        function showAllQuestions() {
+            const listContainer = document.getElementById('list-content');
+            listContainer.innerHTML = '';
+            
+            rawData.forEach((q, i) => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-q">${i+1}. ${q.q}</div>
+                    <div class="list-a">✅ ${q.o[q.a]}</div>
+                `;
+                listContainer.appendChild(item);
+            });
+            showScreen('list-view');
+        }
+
+        // --- AUDIO SYSTEM (Synthesized) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'win') {
+                // Simple arpeggio
+                [400, 500, 600, 800].forEach((freq, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0.05, now + i*0.1);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + i*0.1 + 0.3);
+                    o.start(now + i*0.1);
+                    o.stop(now + i*0.1 + 0.3);
+                });
+            } else if (type === 'lifeline') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(800, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                osc.start(now);
+                osc.stop(now + 0.5);
+            }
+        }
+
+        // --- CONFETTI (Simple Implementation) ---
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function triggerConfetti() {
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10 - 5,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    life: 100
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2; // gravity
+                p.life--;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, 5, 5);
+                if (p.life <= 0) particles.splice(index, 1);
+            });
+            if (particles.length > 0) requestAnimationFrame(animateConfetti);
+        }
+
+    </script>
+</body>
+</html>
