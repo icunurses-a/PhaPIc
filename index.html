@@ -22,7 +22,6 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            /* Background is handled by the .bg-animation div now */
             color: var(--text);
             margin: 0;
             display: flex;
@@ -38,9 +37,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Pharma/Medical Gradient: Mint to Sky Blue */
             background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); 
-            z-index: -1; /* Behind everything */
+            z-index: -1;
             overflow: hidden;
         }
 
@@ -64,10 +62,9 @@
             background: rgba(255, 255, 255, 0.6);
             animation: floatUp 25s linear infinite;
             bottom: -150px;
-            border-radius: 4px; /* Slight rounded square */
+            border-radius: 4px;
         }
 
-        /* VARYING PARTICLES */
         .circles li:nth-child(1){ left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
         .circles li:nth-child(2){ left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
         .circles li:nth-child(3){ left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
@@ -80,21 +77,13 @@
         .circles li:nth-child(10){ left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
 
         @keyframes floatUp {
-            0%{
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-                border-radius: 4px;
-            }
-            100%{
-                transform: translateY(-1000px) rotate(720deg);
-                opacity: 0;
-                border-radius: 50%; /* Morphs into a circle/bubble */
-            }
+            0%{ transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 4px; }
+            100%{ transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
         }
 
         /* --- Header & Title Animation --- */
         header {
-            background: rgba(255, 255, 255, 0.95); /* Slightly transparent */
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 15px 20px;
             text-align: center;
@@ -106,9 +95,9 @@
             justify-content: center;
             align-items: center;
             gap: 15px; 
+            flex-wrap: wrap;
         }
 
-        /* Avatar Styling */
         .avatar {
             width: 50px;
             height: 50px;
@@ -134,6 +123,24 @@
             font-weight: 900;
         }
 
+        #premium-badge {
+            display: none;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         @keyframes rgbShake {
             0% { transform: translate(0, 0) rotate(0deg); color: #ff0000; }
             10% { transform: translate(-2px, -2px) rotate(-2deg); color: #00ff00; }
@@ -155,7 +162,7 @@
 
         .screen {
             display: none;
-            background: rgba(255, 255, 255, 0.95); /* Slight transparency for background effect */
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
             border-radius: 16px;
             padding: 25px;
@@ -172,7 +179,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Menu Buttons --- */
+        /* --- Buttons --- */
         .btn-grid {
             display: grid;
             gap: 15px;
@@ -230,6 +237,56 @@
             padding: 10px;
             margin-bottom: 15px;
             box-shadow: 0 4px 6px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Apple Pay Button */
+        button.apple-pay {
+            background: #000000;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        button.apple-pay:hover {
+            background: #1a1a1a;
+        }
+
+        /* --- Apple Pay Modal UI --- */
+        #pay-status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            height: 50px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .checkmark {
+            color: var(--success);
+            font-size: 2rem;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         /* --- Quiz Interface --- */
@@ -364,7 +421,7 @@
         footer {
             text-align: center;
             padding: 20px;
-            color: var(--text); /* Darker text for better contrast against animated bg */
+            color: var(--text);
             font-size: 0.8rem;
             font-weight: 600;
             background: rgba(255, 255, 255, 0.8);
@@ -387,22 +444,16 @@
 
     <div class="bg-animation">
         <ul class="circles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
         </ul>
     </div>
 
     <header>
         <img src="IMG_1496.JPG" alt="Avatar" class="avatar" onerror="this.style.display='none'">
-        <h1>Pharma <span class="rgb-shake">FINAL</span></h1>
+        <div>
+            <h1>Pharma <span class="rgb-shake">FINAL</span></h1>
+            <div id="premium-badge">✨ PREMIUM</div>
+        </div>
     </header>
 
     <div class="container">
@@ -415,11 +466,25 @@
                 <button onclick="setupQuiz('exam')">⏱️ Exam Test</button>
                 <button class="secondary" onclick="showSettings()">⚙️ Settings</button>
                 <button class="secondary" onclick="showAllQuestions()">📋 Show All Q&A</button>
+                <button class="apple-pay" onclick="showPayScreen()"> Pay (Support)</button>
                 <button class="danger" onclick="exitApp()">Exit App 🚪</button>
             </div>
             <div style="margin-top: 20px; text-align: center;">
                 <p>Total Questions in Bank: <span id="total-q-count">0</span></p>
             </div>
+        </div>
+
+        <div id="pay-screen" class="screen" style="text-align: center;">
+            <h2>Unlock Premium 🌟</h2>
+            <p>Support the developer and unlock the Premium Badge!</p>
+            <h1 style="font-size: 3rem; margin: 20px 0;">$0.99</h1>
+            <div class="btn-grid" style="max-width: 300px; margin: 0 auto;">
+                <button class="apple-pay" id="apple-pay-btn" onclick="processPayment()">
+                    <span style="font-size: 1.2rem;"></span> Pay
+                </button>
+                <button class="secondary" onclick="goHome()">Cancel</button>
+            </div>
+            <div id="pay-status"></div>
         </div>
 
         <div id="settings-screen" class="screen">
@@ -496,8 +561,7 @@
     <canvas id="confetti"></canvas>
 
     <script>
-        // --- DATA EXTRACTION ---
-        
+        // --- DATA ---
         const rawData = [
             { q: "What does the term 'Pathophysiology' literally translate to?", o: ["Study of disease nature", "Study of suffering nature", "Study of normal function", "Study of drug effects"], a: 1 },
             { q: "Which type of etiology refers to a disease present at birth due to developmental issues?", o: ["Inherited", "Congenital", "Infectious", "Degenerative"], a: 1 },
@@ -866,6 +930,44 @@
         function showSettings() {
             showScreen('settings-screen');
         }
+        
+        // --- PAYMENT SIMULATION ---
+        function showPayScreen() {
+            showScreen('pay-screen');
+            document.getElementById('pay-status').innerHTML = ''; // reset status
+        }
+
+        function processPayment() {
+            const statusDiv = document.getElementById('pay-status');
+            const btn = document.getElementById('apple-pay-btn');
+            
+            // Disable button
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            
+            // 1. Show Spinner (Simulate FaceID/Processing)
+            statusDiv.innerHTML = '<div class="spinner"></div>';
+            
+            playSound('processing'); // You could add a specific sound for this if desired
+
+            setTimeout(() => {
+                // 2. Success State
+                statusDiv.innerHTML = '<div class="checkmark">✔ Done</div>';
+                playSound('correct'); // Cha-ching or success sound
+                
+                // 3. Unlock Premium
+                document.getElementById('premium-badge').style.display = 'block'; // Show badge
+                
+                // 4. Redirect after short delay
+                setTimeout(() => {
+                    goHome();
+                    alert("Premium Unlocked! Thank you for your support.");
+                    // Re-enable button for future (though user is now premium)
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }, 1500);
+            }, 2000); // 2 second fake processing time
+        }
 
         function updateSlider(val) {
             questionCount = parseInt(val);
@@ -880,7 +982,6 @@
         function exitApp() {
             showScreen('goodbye-screen');
             playSound('correct');
-            // Try to close window (often blocked by browsers unless script opened it)
             setTimeout(() => {
                 window.close();
             }, 1500);
@@ -948,38 +1049,31 @@
             const correctIdx = q.a;
             const allBtns = document.querySelectorAll('.option-btn');
 
-            // Disable all buttons
             allBtns.forEach(b => b.style.pointerEvents = 'none');
             document.getElementById('lifeline-btn').disabled = true;
 
             if (selectedIdx === correctIdx) {
-                // Correct
                 btnElement.classList.add('correct');
                 playSound('correct');
                 score++;
                 xp += 10;
                 if(currentMode === 'study') triggerConfetti();
             } else {
-                // Wrong
                 btnElement.classList.add('wrong');
                 playSound('wrong');
-                // Show correct one in study mode
                 if (currentMode === 'study') {
                     document.getElementById(`opt-${correctIdx}`).classList.add('correct');
                 }
             }
 
-            // Update stats
             document.getElementById('score-display').innerText = `Score: ${score}/${questions.length}`;
             document.getElementById('xp-display').innerText = `XP: ${xp}`;
             const pct = ((currentIndex + 1) / questions.length) * 100;
             document.getElementById('progress-bar').style.width = `${pct}%`;
 
-            // Navigation logic
             if (currentMode === 'study') {
                 document.getElementById('feedback-area').style.display = 'block';
             } else {
-                // Exam mode: Auto advance after short delay
                 setTimeout(() => nextQuestion(), 800);
             }
         }
@@ -997,11 +1091,9 @@
             if (lifelineUsed) return;
             const q = questions[currentIndex];
             const correctIdx = q.a;
-            let removed = 0;
             
-            // Randomly remove 2 wrong answers
             const wrongIndices = [0,1,2,3].filter(i => i !== correctIdx);
-            shuffle(wrongIndices); // randomize the wrong ones
+            shuffle(wrongIndices);
 
             wrongIndices.slice(0, 2).forEach(idx => {
                 const btn = document.getElementById(`opt-${idx}`);
@@ -1032,7 +1124,6 @@
             playSound(percentage >= 50 ? 'win' : 'lose');
         }
 
-        // --- SHOW ALL ---
         function showAllQuestions() {
             const listContainer = document.getElementById('list-content');
             listContainer.innerHTML = '';
@@ -1080,7 +1171,6 @@
                 osc.start(now);
                 osc.stop(now + 0.2);
             } else if (type === 'win') {
-                // Simple arpeggio
                 [400, 500, 600, 800].forEach((freq, i) => {
                     const o = audioCtx.createOscillator();
                     const g = audioCtx.createGain();
@@ -1099,6 +1189,14 @@
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
                 osc.start(now);
                 osc.stop(now + 0.5);
+            } else if (type === 'processing') {
+                // Subtle tick sound for processing
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
             }
         }
 
